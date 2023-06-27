@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Layout from './components/templates/Layout/Layout';
+import Pagrindinis from './pages/Pagrindinis/Pagrindinis';
+import Atlyginimo_ir_mokesčIų_skaičiuoklė from './pages/Atlyginimo_ir_mokesčIų_skaičiuoklė/Atlyginimo_ir_mokesčIų_skaičiuoklė';
+import Individualios_veiklos_mokesčių_skaičiuoklė from './pages/Individualios_veiklos_mokesčių_skaičiuoklė/Individualios_veiklos_mokesčių_skaičiuoklė';
+import PVM_skaičiuoklė from './pages/PVM_skaičiuoklė/PVM_skaičiuoklė';
+import Suma_žodžiais from './pages/Suma_žodžiais/Suma_žodžiais';
+import Valiutų_skaičiuoklė from './pages/Valiutų_skaičiuoklė/Valiutų_skaičiuoklė';
+
+// GV: later can implement lazy importing (need index files to do so)
 
 function App() {
-  const [count, setCount] = useState(0)
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <Layout />,
+      children: [
+        { index: true, element: <Pagrindinis /> },
+        {
+          path: 'Atlyginimo_ir_mokesčIų_skaičiuoklė',
+          element: <Atlyginimo_ir_mokesčIų_skaičiuoklė />,
+        },
+        {
+          path: 'Individualios_veiklos_mokesčių_skaičiuoklė',
+          element: <Individualios_veiklos_mokesčių_skaičiuoklė />,
+        },
+        {
+          path: 'PVM_skaičiuoklė',
+          element: <PVM_skaičiuoklė />,
+        },
+        { path: 'Suma_žodžiais', element: <Suma_žodžiais /> },
+        { path: 'Valiutų_skaičiuoklė', element: <Valiutų_skaičiuoklė /> },
+      ],
+    },
+  ]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
