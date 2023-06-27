@@ -1,8 +1,8 @@
-import './App.css';
+
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Layout from './components/templates/Layout/Layout';
 import Pagrindinis from './pages/Pagrindinis/Pagrindinis';
-import Atlyginimo_ir_mokesčIų_skaičiuoklė from './pages/Atlyginimo_ir_mokesčIų_skaičiuoklė/Atlyginimo_ir_mokesčIų_skaičiuoklė';
+import Atlyginimo_ir_mokesčių_skaičiuoklė from './pages/Atlyginimo_ir_mokesčių_skaičiuoklė/Atlyginimo_ir_mokesčIų_skaičiuoklė';
 import Individualios_veiklos_mokesčių_skaičiuoklė from './pages/Individualios_veiklos_mokesčių_skaičiuoklė/Individualios_veiklos_mokesčių_skaičiuoklė';
 import PVM_skaičiuoklė from './pages/PVM_skaičiuoklė/PVM_skaičiuoklė';
 import Suma_žodžiais from './pages/Suma_žodžiais/Suma_žodžiais';
@@ -18,8 +18,8 @@ function App() {
       children: [
         { index: true, element: <Pagrindinis /> },
         {
-          path: 'Atlyginimo_ir_mokesčIų_skaičiuoklė',
-          element: <Atlyginimo_ir_mokesčIų_skaičiuoklė />,
+          path: 'Atlyginimo_ir_mokesčių_skaičiuoklė',
+          element: <Atlyginimo_ir_mokesčių_skaičiuoklė />,
         },
         {
           path: 'Individualios_veiklos_mokesčių_skaičiuoklė',
