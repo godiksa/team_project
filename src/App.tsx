@@ -1,4 +1,3 @@
-
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Layout from './components/templates/Layout/Layout';
 import Pagrindinis from './pages/Pagrindinis/Pagrindinis';
