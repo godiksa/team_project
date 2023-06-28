@@ -1,5 +1,5 @@
-const Atlyginimo_ir_mokesčIų_skaičiuoklė = () => {
-  return <main>Atlyginimo_ir_mokesčIų_skaičiuoklė</main>;
+const Atlyginimo_ir_mokesčių_skaičiuoklė = () => {
+  return <main>Atlyginimo_ir_mokesčių_skaičiuoklė</main>;
 };
 
-export default Atlyginimo_ir_mokesčIų_skaičiuoklė;
+export default Atlyginimo_ir_mokesčių_skaičiuoklė;
