@@ -5,15 +5,18 @@ interface StyledContentProps {
 }
 
 export const StyledHeader = styled.div`
-  background-color: #f8f8f8;
   margin: 10px;
 
   .titles {
-    color: black;
+    color: ${(props) => props.theme.palette.shades.greyDark};
     text-decoration: none;
+    padding: 1rem 1.25rem;
+    line-height: 1.5;
+    font-weight: 300;
 
     &:hover {
-      color: darkgrey;
+      color: ${(props) => props.theme.palette.link.main};
+      background-color: ${(props) => props.theme.palette.shades.whiteBis};
     }
   }
 `;
@@ -40,12 +43,22 @@ export const StyledLi = styled.li`
 `;
 export const StyledTogglerIcon = styled.span`
   display: flex;
-
   justify-content: flex-end;
-
-  padding: 8px 16px;
   cursor: pointer;
   font-size: 1rem;
+
+  .navi {
+    padding: 10px;
+  }
+
+  .bul-svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .navi:hover {
+    background-color: #f4f4f4;
+  }
 
   @media screen and (min-width: 768px) {
     display: none;
@@ -57,14 +70,5 @@ export const StyledBurgerContent = styled.div<StyledContentProps>`
 
   @media screen and (min-width: 767px) {
     display: block;
-    background-color: #f8f8f8;
-  }
-`;
-
-export const StyledSpan = styled.span`
-  display: none;
-  padding: 10px;
-  @media screen and (min-width: 768px) {
-    display: inline;
   }
 `;
