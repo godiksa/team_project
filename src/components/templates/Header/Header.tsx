@@ -7,19 +7,28 @@ import {
   StyledBurgerContent,
   StyledLi,
 } from './style';
-import DeleteButton from '../../atoms/DeleteButton';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleTogglerClick = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const handleDocumentClick = (event: any) => {
+    const target = event.target;
+    const isNavi = target.classList.contains('navi') || target.closest('.navi');
+    const isSvg = target.tagName === 'svg';
+
+    if (isNavi || isSvg) {
+      setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen);
+    }
+  };
+
+  const handleMenuLinkClick = () => {
+    setIsMenuOpen(false);
   };
 
   return (
     <>
       <StyledHeader>
-        <StyledTogglerIcon onClick={handleTogglerClick}>
+        <StyledTogglerIcon onClick={handleDocumentClick}>
           {isMenuOpen ? (
             <div className='navi'>
               <svg
@@ -38,26 +47,28 @@ const Header = () => {
               <svg
                 className='bul-svg'
                 xmlns='http://www.w3.org/2000/svg'
-                shape-rendering='geometricPrecision'
-                text-rendering='geometricPrecision'
-                image-rendering='optimizeQuality'
-                fill-rule='evenodd'
-                clip-rule='evenodd'
+                shapeRendering='geometricPrecision'
+                textRendering='geometricPrecision'
+                imageRendering='optimizeQuality'
+                fillRule='evenodd'
+                clipRule='evenodd'
                 viewBox='0 0 512 351.67'
               >
                 <path
-                  fill-rule='nonzero'
+                  fillRule='nonzero'
                   d='M0 0h512v23.91H0V0zm0 327.76h512v23.91H0v-23.91zm0-163.88h512v23.91H0v-23.91z'
                 />
               </svg>
             </div>
           )}
         </StyledTogglerIcon>
-        <StyledBurgerContent isOpen={isMenuOpen}>
+        <StyledBurgerContent
+          onClick={isMenuOpen ? handleDocumentClick : undefined}
+        >
           <nav>
             <StyledHeaderNav>
               <StyledLi>
-                <Link className='titles' to={'/'}>
+                <Link className='titles' to={'/'} onClick={handleMenuLinkClick}>
                   Pagrindinis
                 </Link>
               </StyledLi>
@@ -65,6 +76,7 @@ const Header = () => {
                 <Link
                   className='titles'
                   to={'/Atlyginimo_ir_mokesčių_skaičiuoklė'}
+                  onClick={handleMenuLinkClick}
                 >
                   Atlyginimo ir mokesčių skaičiuoklė
                 </Link>
@@ -73,22 +85,35 @@ const Header = () => {
                 <Link
                   className='titles'
                   to={'/Individualios_veiklos_mokesčių_skaičiuoklė'}
+                  onClick={handleMenuLinkClick}
                 >
                   Individualios veiklos mokesčių skaičiuoklė
                 </Link>
               </StyledLi>
               <StyledLi>
-                <Link className='titles' to={'/PVM_skaičiuoklė'}>
+                <Link
+                  className='titles'
+                  to={'/PVM_skaičiuoklė'}
+                  onClick={handleMenuLinkClick}
+                >
                   PVM skaičiuoklė
                 </Link>
               </StyledLi>
               <StyledLi>
-                <Link className='titles' to={'/Valiutų_skaičiuoklė'}>
+                <Link
+                  className='titles'
+                  to={'/Valiutų_skaičiuoklė'}
+                  onClick={handleMenuLinkClick}
+                >
                   Valiutų skaičiuoklė
                 </Link>
               </StyledLi>
               <StyledLi>
-                <Link className='titles' to={'/Suma_žodžiais'}>
+                <Link
+                  className='titles'
+                  to={'/Suma_žodžiais'}
+                  onClick={handleMenuLinkClick}
+                >
                   Suma žodžiais
                 </Link>
               </StyledLi>
