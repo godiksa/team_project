@@ -1,24 +1,17 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { StyledButton, StyledUnorderedList } from './styles';
 
 interface IDropdownItemProps {
   children: string;
+  onClick: () => void;
 }
 
-const DropdownItem = ({ children }: IDropdownItemProps) => {
+const DropdownItem = ({ children, onClick }: IDropdownItemProps) => {
   const anchorRef = useRef<HTMLAnchorElement>(null);
 
-  const toggleActive = () => {
-    document
-      .querySelectorAll('.dropdown-item')
-      .forEach((x) =>
-        anchorRef.current !== x ? x.classList.remove('active') : null
-      );
-
-    if (anchorRef.current) {
-      anchorRef.current.classList.toggle('active');
-    }
+  const handleClick = () => {
+    onClick();
   };
 
   return (
@@ -27,7 +20,7 @@ const DropdownItem = ({ children }: IDropdownItemProps) => {
         ref={anchorRef}
         href='#'
         className='dropdown-item'
-        onClick={toggleActive}
+        onClick={handleClick}
       >
         {children}
       </a>
@@ -37,21 +30,36 @@ const DropdownItem = ({ children }: IDropdownItemProps) => {
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
 
-  const toggleDropdowItems = () => setIsOpen((prev) => !prev);
+  const toggleDropdownItems = () => setIsOpen((prev) => !prev);
+
+  const handleItemClick = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
 
   return (
     <div>
-      <StyledButton onClick={toggleDropdowItems}>
-        Select <i className='fa-solid fa-angle-down'></i>
+      <StyledButton onClick={toggleDropdownItems}>
+        {selectedOption ? selectedOption : 'Select'}
+        <i className='fa-solid fa-angle-down'></i>
       </StyledButton>
       {isOpen && (
         <StyledUnorderedList>
           {/* later in li tag will  be inserted data that everything would be dynamically  */}
-          <DropdownItem>Select item #1</DropdownItem>
-          <DropdownItem>Select item #2</DropdownItem>
-          <DropdownItem>Select item #3</DropdownItem>
-          <DropdownItem>Select item #4</DropdownItem>
+          <DropdownItem onClick={() => handleItemClick('Select item #1')}>
+            Select item #1
+          </DropdownItem>
+          <DropdownItem onClick={() => handleItemClick('Select item #2')}>
+            Select item #2
+          </DropdownItem>
+          <DropdownItem onClick={() => handleItemClick('Select item #3')}>
+            Select item #3
+          </DropdownItem>
+          <DropdownItem onClick={() => handleItemClick('Select item #4')}>
+            Select item #4
+          </DropdownItem>
         </StyledUnorderedList>
       )}
     </div>
