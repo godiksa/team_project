@@ -33,22 +33,14 @@ const PVM_skaičiuoklė: React.FC = () => {
   });
 
   const handleDisplayValues = (values: any) => {
-    setDisplayedValues((prevValues) => ({
-      ...prevValues,
-      ...values,
-    }));
+    setDisplayedValues((prevValues) => ({ ...prevValues, ...values }));
   };
 
-  const calculatePVM = (amount: number, percentage: string) => {
-    const selectedPercentage = parseInt(percentage.replace('%', ''));
-    const pvmSum = amount * (selectedPercentage / 100);
-    return pvmSum.toFixed(2); 
-  };
+  const calculatePVM = (amount: number, percentage: string) =>
+    (amount * (parseInt(percentage.replace('%', '')) / 100)).toFixed(2);
 
-  const calculateTotalAmount = (amount: number, pvmSum: number) => {
-    const totalAmount = Number(amount) + Number(pvmSum);
-    return totalAmount.toFixed(2);
-  };
+  const calculateTotalAmount = (amount: number, pvmSum: number) =>
+    (Number(amount) + Number(pvmSum)).toFixed(2);
 
   let amount: number | string =
     displayedValues.amount !== '' ? Number(displayedValues.amount) : 0;
