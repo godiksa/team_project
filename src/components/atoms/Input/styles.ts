@@ -11,7 +11,7 @@ export const StyledInputWrapper = styled.div`
   border-color: ${(props) => props.theme.palette.shades.greyLight};
   background-color: ${(props) => props.theme.palette.white};
   height: 35px;
-  margin: 15px;
+  /* margin: 15px; */
   max-width: 1200px;
 `;
 
