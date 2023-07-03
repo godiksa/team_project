@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 
 interface StyledContentProps {
-  isOpen: boolean;
+  onClick?: () => void;
 }
 
 export const StyledHeader = styled.div`
@@ -26,7 +26,7 @@ export const StyledHeaderNav = styled.ul`
   margin: 10px;
   padding: 10px;
 
-  @media screen and (min-width: 767px) {
+  @media screen and (min-width: 1300px) {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -37,18 +37,18 @@ export const StyledLi = styled.li`
   list-style: none;
   padding: 5px;
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1300px) {
     padding: 0;
   }
 `;
 export const StyledTogglerIcon = styled.span`
   display: flex;
   justify-content: flex-end;
-  cursor: pointer;
   font-size: 1rem;
 
   .navi {
     padding: 10px;
+    cursor: pointer;
   }
 
   .bul-svg {
@@ -57,18 +57,18 @@ export const StyledTogglerIcon = styled.span`
   }
 
   .navi:hover {
-    background-color: #f4f4f4;
+    background-color: ${(props) => props.theme.palette.shades.whiteTer};
   }
 
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: 1300px) {
     display: none;
   }
 `;
 
 export const StyledBurgerContent = styled.div<StyledContentProps>`
-  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+  display: ${({ onClick }) => (onClick ? 'block' : 'none')};
 
-  @media screen and (min-width: 767px) {
+  @media screen and (min-width: 1300px) {
     display: block;
   }
 `;
