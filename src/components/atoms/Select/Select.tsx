@@ -1,34 +1,21 @@
-import { useState, useRef, useEffect } from 'react';
-
+import React, { useState } from 'react';
 import { StyledButton, StyledUnorderedList } from './styles';
 
-interface IDropdownItemProps {
-  children: string;
-  onClick: () => void;
+interface IDropdownItem {
+  id: string;
+  label: string;
 }
 
-const DropdownItem = ({ children, onClick }: IDropdownItemProps) => {
-  const anchorRef = useRef<HTMLAnchorElement>(null);
+interface DropdownProps {
+  options: IDropdownItem[];
+}
 
-  const handleClick = () => {
-    onClick();
-  };
+interface DropdownItemProps {
+  onClick: () => void;
+  children: React.ReactNode;
+}
 
-  return (
-    <li>
-      <a
-        ref={anchorRef}
-        href='#'
-        className='dropdown-item'
-        onClick={handleClick}
-      >
-        {children}
-      </a>
-    </li>
-  );
-};
-
-const Dropdown = () => {
+const Dropdown = ({ options }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -47,22 +34,27 @@ const Dropdown = () => {
       </StyledButton>
       {isOpen && (
         <StyledUnorderedList>
-          {/* later in li tag will  be inserted data that everything would be dynamically  */}
-          <DropdownItem onClick={() => handleItemClick('Select item #1')}>
-            Select item #1
-          </DropdownItem>
-          <DropdownItem onClick={() => handleItemClick('Select item #2')}>
-            Select item #2
-          </DropdownItem>
-          <DropdownItem onClick={() => handleItemClick('Select item #3')}>
-            Select item #3
-          </DropdownItem>
-          <DropdownItem onClick={() => handleItemClick('Select item #4')}>
-            Select item #4
-          </DropdownItem>
+          {options.map((option) => (
+            <DropdownItem
+              key={option.id}
+              onClick={() => handleItemClick(option.label)}
+            >
+              {option.label}
+            </DropdownItem>
+          ))}
         </StyledUnorderedList>
       )}
     </div>
+  );
+};
+
+const DropdownItem: React.FC<DropdownItemProps> = ({ children, onClick }) => {
+  return (
+    <li>
+      <a href='#' className='dropdown-item' onClick={onClick}>
+        {children}
+      </a>
+    </li>
   );
 };
 
