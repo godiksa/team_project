@@ -16,7 +16,7 @@ const PVM_skaičiuoklė: React.FC = () => {
       key: 'amount',
       text: 'Suma (EUR)',
       type: 'number',
-      textPlaceholder: 'Enter amount',
+      textPlaceholder: 'Įveskite suma',
     },
     {
       key: 'percentage',
