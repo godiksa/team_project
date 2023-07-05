@@ -8,6 +8,8 @@ interface IDropdownItem {
 
 interface DropdownProps {
   options: IDropdownItem[];
+  value: string;
+  onChange: (value: string) => void;
 }
 
 interface DropdownItemProps {
@@ -15,21 +17,20 @@ interface DropdownItemProps {
   children: React.ReactNode;
 }
 
-const Dropdown = ({ options }: DropdownProps) => {
+const Dropdown = ({ options, value, onChange }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('');
 
   const toggleDropdownItems = () => setIsOpen((prev) => !prev);
 
   const handleItemClick = (option: string) => {
-    setSelectedOption(option);
+    onChange(option);
     setIsOpen(false);
   };
 
   return (
     <div>
       <StyledButton onClick={toggleDropdownItems}>
-        {selectedOption ? selectedOption : 'Select'}
+        {value ? value : 'Select'}
         <i className='fa-solid fa-angle-down'></i>
       </StyledButton>
       {isOpen && (
