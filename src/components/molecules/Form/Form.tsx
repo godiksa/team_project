@@ -34,9 +34,14 @@ export interface FormValues {
 interface FormProps {
   fields: FormField[];
   displayValues: (values: FormValues) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Form = ({ fields, displayValues }: FormProps) => {
+const Form: React.FC<FormProps> = ({
+  fields,
+  displayValues,
+  onChange,
+}: FormProps) => {
   const [formValues, setFormValues] = useState<FormValues>(() => {
     const defaultValues: FormValues = {};
     fields.forEach((field) => {
@@ -79,6 +84,16 @@ const Form = ({ fields, displayValues }: FormProps) => {
       : buttonPressed.filter((x) => x !== key);
 
     setButtonPressed(updatedDeleteKeys);
+
+    if (onChange) {
+      const event = {
+        target: {
+          name: key,
+          value: value,
+        },
+      };
+      onChange(event as React.ChangeEvent<HTMLInputElement>);
+    }
   };
 
   const handleCheckboxChange = (

@@ -64,8 +64,18 @@ const CurrencyCalculator = () => {
         const data = await currencyAPI.getCurrency();
         setInitialCurrencyRates(data);
         setBaseCurrency(Object.keys(data)[0]);
-        const randomCurrencies = getRandomCurrencies(Object.keys(data), 5); // Set count to 5
-        setDisplayedCurrencies(randomCurrencies);
+        setDisplayedCurrencies([
+          'eur',
+          'pln',
+          'gbp',
+          'usd',
+          'uah',
+          'try',
+          'aud',
+          'cad',
+          'nok',
+          'jpy',
+        ]);
       } catch (error) {
         console.error('Error fetching currency rates:', error);
       }
@@ -75,17 +85,25 @@ const CurrencyCalculator = () => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json'
-    )
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchCurrencyData = async () => {
+      try {
+        const response = await fetch(
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json?_=${Date.now()}`
+        );
+        const data = await response.json();
         const formattedDate = data.date.toString();
         setDateValue(formattedDate);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('Error fetching currency data:', error);
-      });
+      }
+    };
+
+    fetchCurrencyData();
+    const interval = setInterval(fetchCurrencyData, 3600000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -101,11 +119,6 @@ const CurrencyCalculator = () => {
   const calculatedCurrencyValues = {
     ...calculateCurrencyValues(),
     [baseCurrency]: parseFloat(baseValue.replace(',', '.')) || 0,
-  };
-
-  const getRandomCurrencies = (currencies: string[], count: number) => {
-    const shuffledCurrencies = currencies.sort(() => 0.5 - Math.random());
-    return shuffledCurrencies.slice(0, count);
   };
 
   return (

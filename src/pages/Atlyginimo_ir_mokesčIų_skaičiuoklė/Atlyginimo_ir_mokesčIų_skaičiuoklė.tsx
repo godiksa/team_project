@@ -69,7 +69,7 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
       const maxWage = 2864;
 
       if (amount <= minWage23) {
-        npd = 625;
+        npd = 0;
       } else if (amount < avgWage23 && amount > minWage23) {
         npd = 625 - 0.42 * (amount - minWage23);
       } else if (amount > avgWage23 && amount < maxWage) {

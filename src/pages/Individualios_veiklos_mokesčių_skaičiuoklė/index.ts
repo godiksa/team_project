@@ -1,0 +1,2 @@
+import Individualios_veiklos_mokesčių_skaičiuoklė from './Individualios_veiklos_mokesčių_skaičiuoklė';
+export default Individualios_veiklos_mokesčių_skaičiuoklė;
