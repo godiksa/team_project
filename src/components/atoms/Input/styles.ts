@@ -27,10 +27,12 @@ export const StyledInput = styled.input`
   background-color: ${(props) => props.theme.palette.white};
   border-radius: 0.375em;
   background-color: ${(props) => props.theme.palette.white};
-
   width: 100%;
   color: #676c7e;
   padding: 0 13px;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 300;
 
   &::placeholder {
     color: #9b9eac;

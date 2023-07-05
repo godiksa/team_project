@@ -45,7 +45,7 @@ const Input = ({
     return () => {
       document.removeEventListener('click', handleOutsideInputClick);
     };
-  }, []);
+  }, [theme.palette.shades.greyLight]);
 
   const handleClick = () => {
     if (inputWrapperRef.current) {
@@ -65,6 +65,19 @@ const Input = ({
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    // Check if the input value is a valid number or an empty string
+    if (!isNaN(Number(inputValue)) || inputValue === '') {
+      // Check if the input value is greater than or equal to 0
+      if (Number(inputValue) >= 0) {
+        setvalue(inputValue);
+      } else {
+        setvalue('');
+      }
+    }
+  };
+
   return (
     <StyledInputWrapper ref={inputWrapperRef} onClick={handleClick}>
       <StyledIcon ref={iconRef}>{icon && icon}</StyledIcon>
@@ -72,7 +85,7 @@ const Input = ({
         ref={inputRef}
         type={type}
         value={value}
-        onChange={(e: any) => setvalue(e.target.value)}
+        onChange={handleChange}
         placeholder={placeholder ? placeholder : ''}
       />
     </StyledInputWrapper>

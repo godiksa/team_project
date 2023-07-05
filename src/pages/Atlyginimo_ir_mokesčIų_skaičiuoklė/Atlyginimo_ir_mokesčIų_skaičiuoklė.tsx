@@ -174,8 +174,6 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
         Number(sodra2)
       );
 
-      console.log(`initial fake atlyginimas: ${fakeAtlyginimas}`);
-
       while (Number(fakeAtlyginimas) != atlyginimasIrankas) {
         amount = (Number(amount) + 0.01).toFixed(2);
         npd = calculateNPD(Number(amount), displayedValues.year);
@@ -193,11 +191,7 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
           Number(sodra1),
           Number(sodra2)
         );
-        // console.log(atlyginimasIrankas);
       }
-
-      console.log(`fake atlyginimas: ${fakeAtlyginimas}`);
-      console.log(`amount: ${amount}`);
     }
   } else {
     amount = '';
