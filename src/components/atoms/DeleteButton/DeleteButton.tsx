@@ -1,8 +1,12 @@
 import { StyledDeleteButton, XIcon } from './style';
 
-const DeleteButton = () => {
+interface DeleteButtonProps {
+  onClick: () => void;
+}
+
+const DeleteButton = ({ onClick }: DeleteButtonProps) => {
   return (
-    <StyledDeleteButton>
+    <StyledDeleteButton onClick={onClick}>
       Delete
       <XIcon
         xmlns='http://www.w3.org/2000/svg'

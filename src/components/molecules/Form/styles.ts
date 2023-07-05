@@ -14,4 +14,10 @@ export const StyledForm = styled.div`
   button {
     margin: 8px 0;
   }
+
+  .field-with-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
 `;

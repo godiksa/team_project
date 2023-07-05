@@ -1,9 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Radio from '../../atoms/Radio';
 import Input from '../../atoms/Input';
 import DeleteButton from '../../atoms/DeleteButton';
 import { StyledForm } from './styles';
 import Dropdown from '../../atoms/Select/Select';
+
+interface PopupInputFields {
+  triggerText: string;
+  key: string;
+  text: string;
+  type: 'text' | 'number' | 'radio' | 'checkbox' | 'select';
+  textPlaceholder?: string;
+  radioOptions?: string[];
+  selectOptions?: string[];
+  button?: boolean;
+}
 
 export interface FormField {
   key: string;
@@ -13,6 +24,7 @@ export interface FormField {
   radioOptions?: string[];
   selectOptions?: string[];
   button?: boolean;
+  popupInput?: PopupInputFields[];
 }
 
 export interface FormValues {
@@ -25,9 +37,34 @@ interface FormProps {
 }
 
 const Form = ({ fields, displayValues }: FormProps) => {
-  const [formValues, setFormValues] = useState<FormValues>({});
+  const [formValues, setFormValues] = useState<FormValues>(() => {
+    const defaultValues: FormValues = {};
+    fields.forEach((field) => {
+      if (field.type === 'select' && field.selectOptions) {
+        defaultValues[field.key] = field.selectOptions[0];
+      } else if (field.type === 'radio' && field.radioOptions) {
+        defaultValues[field.key] = field.radioOptions[0];
+      }
+    });
+    return defaultValues;
+  });
+  const [selectedTriggerTexts, setSelectedTriggerTexts] = useState<FormValues>(
+    {}
+  );
+  const [selectedTriggerCheckboxes, setSelectedTriggerCheckboxes] = useState<
+    (string | number | boolean)[]
+  >([]);
+  const [buttonPressed, setButtonPressed] = useState<string[]>([]);
 
-  const handleInputChange = (key: string, value: string | number) => {
+  useEffect(() => {
+    displayValues(formValues);
+  }, []);
+
+  const handleInputChange = (
+    key: string,
+    value: string | number | boolean,
+    popupKey: string
+  ) => {
     const updatedValues = {
       ...formValues,
       [key]: value,
@@ -35,9 +72,20 @@ const Form = ({ fields, displayValues }: FormProps) => {
 
     setFormValues(updatedValues);
     displayValues(updatedValues);
+    setSelectedTriggerTexts(updatedValues);
+
+    const updatedDeleteKeys = buttonPressed.includes(popupKey)
+      ? buttonPressed.filter((x) => x !== popupKey)
+      : buttonPressed.filter((x) => x !== key);
+
+    setButtonPressed(updatedDeleteKeys);
   };
 
-  const handleCheckboxChange = (key: string, value: string) => {
+  const handleCheckboxChange = (
+    key: string,
+    value: string,
+    popupKey: string
+  ) => {
     const selectedValues = (formValues[key] as (string | number)[]) || [];
 
     const updatedValues = selectedValues.includes(value)
@@ -51,71 +99,326 @@ const Form = ({ fields, displayValues }: FormProps) => {
 
     setFormValues(updatedFormValues);
     displayValues(updatedFormValues);
+
+    const updatedTriggerValues = selectedTriggerCheckboxes.includes(value)
+      ? selectedTriggerCheckboxes.filter((x) => x !== value)
+      : [...selectedTriggerCheckboxes, value];
+
+    setSelectedTriggerCheckboxes(updatedTriggerValues);
+
+    const updatedDeleteKeys = buttonPressed.includes(popupKey)
+      ? buttonPressed.filter((x) => x !== popupKey)
+      : buttonPressed.filter((x) => x !== key);
+
+    setButtonPressed(updatedDeleteKeys);
+  };
+
+  const handleDeleteButtonClick = (key: string) => {
+    setButtonPressed((prevKey) => [...prevKey, key]);
+
+    const updatedFormValues = { ...formValues };
+    delete updatedFormValues[key];
+
+    setFormValues(updatedFormValues);
+    displayValues(updatedFormValues);
   };
 
   return (
     <StyledForm>
-      {fields.map((field) => (
-        <div key={field.key}>
-          <p key={field.key}>{field.text}</p>
-          {(field.type === 'text' || field.type === 'number') && (
-            <div className={field.key}>
-              <Input
-                type={field.type}
-                value={
-                  String(formValues[field.key]) === 'undefined'
-                    ? ''
-                    : String(formValues[field.key])
-                }
-                setvalue={(value) => handleInputChange(field.key, value)}
-                placeholder={field.textPlaceholder}
-              />
-            </div>
-          )}
-          {field.type === 'radio' &&
-            field.radioOptions &&
-            field.radioOptions.map((option) => (
-              <div key={option} className={field.key}>
-                <Radio
-                  type='radio'
-                  value={option}
-                  checked={formValues[field.key] === option}
-                  onChange={(value) =>
-                    handleInputChange(field.key, String(value))
-                  }
-                />
-              </div>
-            ))}
-          {field.type === 'checkbox' &&
-            field.radioOptions &&
-            field.radioOptions.map((option) => (
-              <div key={option} className={field.key}>
-                <Radio
-                  type='checkbox'
-                  value={option}
-                  onChange={(value) =>
-                    handleCheckboxChange(field.key, String(value))
-                  }
-                />
-              </div>
-            ))}
-          {field.type === 'select' && (
-            <select
-              className={field.key}
-              id={field.key}
-              value={formValues[field.key] as string}
-              onChange={(e) => handleInputChange(field.key, e.target.value)}
+      {fields.map(
+        (field) =>
+          !buttonPressed.includes(field.key) && (
+            <div
+              key={field.key}
+              className={`${field.button ? 'field-with-button' : ''}`}
             >
-              {field.selectOptions?.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          )}
-          {field.button && <DeleteButton />}
-        </div>
-      ))}
+              <p key={field.key}>{field.text}</p>
+              {(field.type === 'text' || field.type === 'number') && (
+                <div className={field.key}>
+                  <Input
+                    type={field.type}
+                    value={
+                      String(formValues[field.key]) === 'undefined'
+                        ? ''
+                        : String(formValues[field.key])
+                    }
+                    setvalue={(value) =>
+                      handleInputChange(
+                        field.key,
+                        String(value),
+                        field.popupInput ? field.popupInput[0].key : ''
+                      )
+                    }
+                    placeholder={field.textPlaceholder}
+                  />
+                </div>
+              )}
+              {field.type === 'radio' &&
+                field.radioOptions &&
+                field.radioOptions.map((option) => (
+                  <div key={option} className={field.key}>
+                    <Radio
+                      type='radio'
+                      value={option}
+                      checked={formValues[field.key] === option}
+                      onChange={(value) =>
+                        handleInputChange(
+                          field.key,
+                          String(value),
+                          field.popupInput ? field.popupInput[0].key : ''
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+              {field.type === 'checkbox' &&
+                field.radioOptions &&
+                field.radioOptions.map((option) => (
+                  <div key={option} className={field.key}>
+                    <Radio
+                      type='checkbox'
+                      value={option}
+                      onChange={(value) =>
+                        handleCheckboxChange(
+                          field.key,
+                          String(value),
+                          field.popupInput ? field.popupInput[0].key : ''
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+              {field.type === 'select' && (
+                <Dropdown
+                  options={
+                    field.selectOptions
+                      ? field.selectOptions.map((option) => ({
+                          id: option,
+                          label: option,
+                        }))
+                      : [
+                          {
+                            id: 'Select',
+                            label: 'Select',
+                          },
+                        ]
+                  }
+                  value={formValues[field.key] as string}
+                  onChange={(value: string | number | boolean) =>
+                    handleInputChange(
+                      field.key,
+                      value,
+                      field.popupInput ? field.popupInput[0].key : ''
+                    )
+                  }
+                />
+              )}
+              {field.popupInput?.map(
+                (popupField: PopupInputFields) =>
+                  !buttonPressed.includes(popupField.key) && (
+                    <div
+                      key={popupField.key}
+                      className={`${
+                        popupField.button ? 'field-with-button' : ''
+                      }`}
+                    >
+                      {selectedTriggerCheckboxes.includes(
+                        popupField.triggerText
+                      ) && (
+                        <>
+                          <p>{popupField.text}</p>
+                          {popupField.type === 'text' ||
+                          popupField.type === 'number' ? (
+                            <div className={popupField.key}>
+                              <Input
+                                type={popupField.type}
+                                value={
+                                  String(formValues[popupField.key]) ===
+                                  'undefined'
+                                    ? ''
+                                    : String(formValues[popupField.key])
+                                }
+                                setvalue={(value) =>
+                                  handleInputChange(popupField.key, value, '')
+                                }
+                                placeholder={popupField.textPlaceholder}
+                              />
+                            </div>
+                          ) : popupField.type === 'radio' ? (
+                            <div>
+                              {popupField.radioOptions?.map((option) => (
+                                <div key={option} className={popupField.key}>
+                                  <Radio
+                                    type='radio'
+                                    value={option}
+                                    checked={
+                                      formValues[popupField.key] === option
+                                    }
+                                    onChange={(value) =>
+                                      handleInputChange(
+                                        popupField.key,
+                                        value,
+                                        ''
+                                      )
+                                    }
+                                  />
+                                  {option}
+                                </div>
+                              ))}
+                            </div>
+                          ) : popupField.type === 'checkbox' ? (
+                            <div>
+                              {popupField.radioOptions?.map((option) => (
+                                <div key={option} className={popupField.key}>
+                                  <Radio
+                                    type='checkbox'
+                                    value={option}
+                                    onChange={(value) =>
+                                      handleInputChange(
+                                        popupField.key,
+                                        value,
+                                        ''
+                                      )
+                                    }
+                                  />
+                                  {option}
+                                </div>
+                              ))}
+                            </div>
+                          ) : popupField.type === 'select' ? (
+                            <Dropdown
+                              options={
+                                popupField.selectOptions
+                                  ? popupField.selectOptions.map((option) => ({
+                                      id: option,
+                                      label: option,
+                                    }))
+                                  : [
+                                      {
+                                        id: 'Select',
+                                        label: 'Select',
+                                      },
+                                    ]
+                              }
+                              value={formValues[popupField.key] as string}
+                              onChange={(value: string | number | boolean) =>
+                                handleInputChange(popupField.key, value, '')
+                              }
+                            />
+                          ) : null}
+                          {popupField.button && (
+                            <DeleteButton
+                              onClick={() =>
+                                handleDeleteButtonClick(popupField.key)
+                              }
+                            />
+                          )}
+                        </>
+                      )}
+                      {Object.values(selectedTriggerTexts).includes(
+                        popupField.triggerText
+                      ) && (
+                        <>
+                          <p>{popupField.text}</p>
+                          {popupField.type === 'text' ||
+                          popupField.type === 'number' ? (
+                            <div className={popupField.key}>
+                              <Input
+                                type={popupField.type}
+                                value={
+                                  String(formValues[popupField.key]) ===
+                                  'undefined'
+                                    ? ''
+                                    : String(formValues[popupField.key])
+                                }
+                                setvalue={(value) =>
+                                  handleInputChange(popupField.key, value, '')
+                                }
+                                placeholder={popupField.textPlaceholder}
+                              />
+                            </div>
+                          ) : popupField.type === 'radio' ? (
+                            <div>
+                              {popupField.radioOptions?.map((option) => (
+                                <div key={option} className={popupField.key}>
+                                  <Radio
+                                    type='radio'
+                                    value={option}
+                                    checked={
+                                      formValues[popupField.key] === option
+                                    }
+                                    onChange={(value) =>
+                                      handleInputChange(
+                                        popupField.key,
+                                        value,
+                                        ''
+                                      )
+                                    }
+                                  />
+                                  {option}
+                                </div>
+                              ))}
+                            </div>
+                          ) : popupField.type === 'checkbox' ? (
+                            <div>
+                              {popupField.radioOptions?.map((option) => (
+                                <div key={option} className={popupField.key}>
+                                  <Radio
+                                    type='checkbox'
+                                    value={option}
+                                    onChange={(value) =>
+                                      handleCheckboxChange(
+                                        popupField.key,
+                                        value,
+                                        ''
+                                      )
+                                    }
+                                  />
+                                  {option}
+                                </div>
+                              ))}
+                            </div>
+                          ) : popupField.type === 'select' ? (
+                            <Dropdown
+                              options={
+                                popupField.selectOptions
+                                  ? popupField.selectOptions.map((option) => ({
+                                      id: option,
+                                      label: option,
+                                    }))
+                                  : [
+                                      {
+                                        id: 'select',
+                                        label: 'Select',
+                                      },
+                                    ]
+                              }
+                              value={formValues[popupField.key] as string}
+                              onChange={(value: string | number | boolean) =>
+                                handleInputChange(popupField.key, value, '')
+                              }
+                            />
+                          ) : null}
+                          {popupField.button && (
+                            <DeleteButton
+                              onClick={() =>
+                                handleDeleteButtonClick(popupField.key)
+                              }
+                            />
+                          )}
+                        </>
+                      )}
+                    </div>
+                  )
+              )}
+              {field.button && (
+                <DeleteButton
+                  onClick={() => handleDeleteButtonClick(field.key)}
+                />
+              )}
+            </div>
+          )
+      )}
     </StyledForm>
   );
 };
