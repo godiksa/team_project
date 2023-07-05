@@ -1,101 +1,186 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { currencyAPI } from '../../shared/api/index';
+import DeleteButton from '../../components/atoms/DeleteButton';
+import Input from '../../components/atoms/Input/Input';
+import {
+  StyledBox,
+  StyledBoxLeft,
+  StyledBoxRight,
+  StyledSelect,
+  StyledTitle,
+  StyledWrapper,
+} from './styles';
 
-interface ICurrencyCounterProps {}
-
-const CurrencyCounter: React.FC<ICurrencyCounterProps> = () => {
-  const [availableCurrencies] = useState<string[]>(['eur', 'usd', 'gbp', 'aud', 'bgn', 'cad']);
-  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>(['eur', 'usd', 'gbp', 'aud', 'bgn', 'cad']);
+const CurrencyCalculator = () => {
+  const [baseCurrency, setBaseCurrency] = useState('');
+  const [baseValue, setBaseValue] = useState('');
+  const [initialCurrencyRates, setInitialCurrencyRates] = useState<{
+    [key: string]: number;
+  }>({});
   const [selectedCurrency, setSelectedCurrency] = useState<string>('');
-  const [baseCurrencyInput, setBaseCurrencyInput] = useState<string>('');
-  const [baseCurrencyValue, setBaseCurrencyValue] = useState<number | null>(null);
-  const [currencyValues, setCurrencyValues] = useState<{ [key: string]: number }>({});
+  const [displayedCurrencies, setDisplayedCurrencies] = useState<string[]>([]);
+  const [dateValue, setDateValue] = useState('');
+
+  const handleBaseCurrencyChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const currency = e.target.value;
+    setBaseCurrency(currency);
+  };
+
+  const handleBaseValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setBaseValue(value);
+  };
+
+  const handleCurrencySelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const currency = e.target.value;
+    setSelectedCurrency(currency);
+  };
+
+  const handleCurrencyRemoval = (currency: string) => {
+    setDisplayedCurrencies((prevCurrencies) =>
+      prevCurrencies.filter((c) => c !== currency)
+    );
+  };
+
+  const calculateCurrencyValues = () => {
+    const parsedValue = parseFloat(baseValue.replace(',', '.')) || 0;
+
+    const calculatedCurrencyValues = Object.entries(
+      initialCurrencyRates
+    ).reduce((result, [currency, rate]) => {
+      result[currency] =
+        (parsedValue * rate) / initialCurrencyRates[baseCurrency];
+      return result;
+    }, {} as { [key: string]: number });
+
+    return calculatedCurrencyValues;
+  };
 
   useEffect(() => {
-    const fetchCurrencies = async () => {
+    const fetchCurrencyRates = async () => {
       try {
         const data = await currencyAPI.getCurrency();
-        setCurrencyValues(data);
+        setInitialCurrencyRates(data);
+        setBaseCurrency(Object.keys(data)[0]);
+        const randomCurrencies = getRandomCurrencies(Object.keys(data), 5); // Set count to 5
+        setDisplayedCurrencies(randomCurrencies);
       } catch (error) {
-        console.error('Error fetching currencies:', error);
+        console.error('Error fetching currency rates:', error);
       }
     };
 
-    fetchCurrencies();
+    fetchCurrencyRates();
   }, []);
 
-  const handleCurrencySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCurrency = e.target.value;
-    setSelectedCurrency(selectedCurrency);
-  
-    if (selectedCurrency !== '') {
-      const exchangeRate = currencyValues[selectedCurrency];
-      const updatedBaseCurrencyValue = baseCurrencyValue !== null ? baseCurrencyValue * exchangeRate : null;
-      setBaseCurrencyValue(updatedBaseCurrencyValue);
-    }
-  };
+  useEffect(() => {
+    fetch(
+      'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json'
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedDate = data.date.toString();
+        setDateValue(formattedDate);
+      })
+      .catch((error) => {
+        console.error('Error fetching currency data:', error);
+      });
+  }, []);
 
-  const handleBaseCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setBaseCurrencyInput(value);
-
-    if (value === '') {
-      setBaseCurrencyValue(null);
-    } else {
-      const parsedValue = Number(value);
-      setBaseCurrencyValue(parsedValue);
-    }
-  };
-
-  const handleAddCurrency = () => {
-    if (selectedCurrency !== '' && !selectedCurrencies.includes(selectedCurrency)) {
-      setSelectedCurrencies([...selectedCurrencies, selectedCurrency]);
+  useEffect(() => {
+    if (selectedCurrency && !displayedCurrencies.includes(selectedCurrency)) {
+      setDisplayedCurrencies((prevCurrencies) => [
+        ...prevCurrencies,
+        selectedCurrency,
+      ]);
       setSelectedCurrency('');
     }
+  }, [selectedCurrency, displayedCurrencies]);
+
+  const calculatedCurrencyValues = {
+    ...calculateCurrencyValues(),
+    [baseCurrency]: parseFloat(baseValue.replace(',', '.')) || 0,
   };
 
-  const handleRemoveCurrency = (currency: string) => {
-    const updatedCurrencies = selectedCurrencies.filter((c) => c !== currency);
-    setSelectedCurrencies(updatedCurrencies);
+  const getRandomCurrencies = (currencies: string[], count: number) => {
+    const shuffledCurrencies = currencies.sort(() => 0.5 - Math.random());
+    return shuffledCurrencies.slice(0, count);
   };
 
   return (
-    <main>
-      <input type="number" value={baseCurrencyInput} onChange={handleBaseCurrencyChange} />
-
-      <select value={selectedCurrency} onChange={handleCurrencySelect}>
-        <option value="">Select Currency</option>
-        {availableCurrencies.map((currency) => (
-          <option key={currency} value={currency}>
-            {currency}
-          </option>
-        ))}
-      </select>
-
-      <button onClick={handleAddCurrency}>Add Currency</button>
-
-      {selectedCurrencies.length > 0 && (
-        <div>
-          <p>Selected Currencies:</p>
-          {selectedCurrencies.map((currency) => (
-            <div key={currency}>
-              {currency}: 
-              <input
-                type="number"
-                value={
-                  baseCurrencyValue !== null && currencyValues[currency] !== undefined
-                    ? (baseCurrencyValue * currencyValues[currency]).toFixed(2)
-                    : ''
-                }
-                readOnly
+    <StyledWrapper>
+      <StyledBox>
+        {' '}
+        <StyledBoxLeft>
+          {' '}
+          <div>Data: {dateValue}</div>
+          <div>
+            <h3>Bazinė valiuta:</h3>
+            <StyledSelect
+              value={baseCurrency}
+              onChange={handleBaseCurrencyChange}
+            >
+              {Object.keys(initialCurrencyRates).map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </StyledSelect>
+          </div>
+          <div>
+            <h3>Suma:</h3>
+            <div className='input'>
+              <Input
+                type='text'
+                value={baseValue}
+                onChange={handleBaseValueChange}
+                setvalue={setBaseValue}
               />
-              <button onClick={() => handleRemoveCurrency(currency)}>Remove</button>
+            </div>
+          </div>
+          <div>
+            <h3>Pridėti valiutą:</h3>
+            <StyledSelect
+              value={selectedCurrency}
+              onChange={handleCurrencySelection}
+            >
+              <option value='' disabled>
+                Pasirinkite valiutą
+              </option>
+              {Object.keys(initialCurrencyRates).map((currency) => (
+                <option key={currency} value={currency}>
+                  {currency}
+                </option>
+              ))}
+            </StyledSelect>
+          </div>
+        </StyledBoxLeft>
+        <StyledBoxRight>
+          <h3>Valiutos:</h3>
+          {displayedCurrencies.map((currency) => (
+            <div key={currency}>
+              <div className='input-right'>
+                <div className='input-right-c'>
+                  <StyledTitle className='currencyTitle'>
+                    {currency}:{' '}
+                  </StyledTitle>
+                </div>
+                <div className='input-right-w'>
+                  <Input
+                    type='text'
+                    value={(calculatedCurrencyValues[currency] || 0).toFixed(2)}
+                    readOnly
+                  />
+                </div>
+                <DeleteButton onClick={() => handleCurrencyRemoval(currency)} />
+              </div>
             </div>
           ))}
-        </div>
-      )}
-    </main>
+        </StyledBoxRight>
+      </StyledBox>
+    </StyledWrapper>
   );
 };
 
-export default CurrencyCounter;
+export default CurrencyCalculator;
