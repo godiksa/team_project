@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import Form from '../../components/molecules/Form';
 import Display from '../../components/molecules/Display';
-import { StyledPage } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
+import {
+  StyledPage,
+  StyledResultsWrapper,
+  StyledTitle,
+} from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
 //import { useTheme } from 'styled-components';
 
@@ -199,31 +203,34 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
 
   return (
     <StyledPage>
-      <Form fields={fields} displayValues={handleDisplayValues} />
-      <Display
-        labelTitles={[
-          'Atlyginimas "ant popieriaus"',
-          'Pritaikytas NPD',
-          'Pajamų mokestis 20%',
-          'Sodra. Sveikatos draudimas 6.98%',
-          'Sodra. Pensijų ir soc. draudimas 12,52%',
-          'Išmokamas atlyginimas "į rankas"',
-          'Darbdavio sumokami mokesčiai',
-          'Sodra 1,77%',
-          'Visa darbo vietos kaina',
-        ]}
-        values={[
-          `${amount.toString()} €`,
-          `${npd.toString()} €`,
-          `${pajamuMokestis.toString()} €`,
-          `${sodra1.toString()} €`,
-          `${sodra2.toString()} €`,
-          `${atlyginimasIrankas.toString()} €`,
-          '',
-          `${darbdavioSodra.toString()} €`,
-          `${visaDarboVieta.toString()} €`,
-        ]}
-      />
+      <StyledTitle>Atlyginimo ir mokesčių skaičiuoklė</StyledTitle>
+      <StyledResultsWrapper>
+        <Form fields={fields} displayValues={handleDisplayValues} />
+        <Display
+          labelTitles={[
+            'Atlyginimas "ant popieriaus"',
+            'Pritaikytas NPD',
+            'Pajamų mokestis 20%',
+            'Sodra. Sveikatos draudimas 6.98%',
+            'Sodra. Pensijų ir soc. draudimas 12,52%',
+            'Išmokamas atlyginimas "į rankas"',
+            'Darbdavio sumokami mokesčiai',
+            'Sodra 1,77%',
+            'Visa darbo vietos kaina',
+          ]}
+          values={[
+            `${amount.toString()} €`,
+            `${npd.toString()} €`,
+            `${pajamuMokestis.toString()} €`,
+            `${sodra1.toString()} €`,
+            `${sodra2.toString()} €`,
+            `${atlyginimasIrankas.toString()} €`,
+            '',
+            `${darbdavioSodra.toString()} €`,
+            `${visaDarboVieta.toString()} €`,
+          ]}
+        />
+      </StyledResultsWrapper>
     </StyledPage>
   );
 };

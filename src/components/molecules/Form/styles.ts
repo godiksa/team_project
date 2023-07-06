@@ -2,6 +2,8 @@ import { styled } from 'styled-components';
 
 export const StyledForm = styled.div`
   padding: 0 24px;
+  width: 50%;
+  margin-bottom: 2.5em;
 
   p {
     color: ${(props) => props.theme.palette.shades.greyDarker};
