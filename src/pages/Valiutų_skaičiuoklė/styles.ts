@@ -2,7 +2,8 @@ import { styled } from 'styled-components';
 import '../../index.css';
 
 export const StyledWrapper = styled.div`
-margin-top: 60px;
+  margin-top: 60px;
+
   input {
     margin: 5px;
   }
@@ -36,6 +37,10 @@ export const StyledSelect = styled.select`
 export const StyledBox = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const StyledBoxLeft = styled.div`
@@ -44,6 +49,9 @@ export const StyledBoxLeft = styled.div`
   flex-direction: column;
   padding-left: 25px;
 
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
   .input {
     width: 31.7%;
   }
@@ -54,6 +62,13 @@ export const StyledBoxLeft = styled.div`
 `;
 export const StyledBoxRight = styled.div`
   width: 50%;
+  padding-left: 25px;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    margin-top: 10px;
+    height: 600px;
+  }
 
   .input-right-c {
     width: 100px;
