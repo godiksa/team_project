@@ -10,7 +10,7 @@ export const StyledInputWrapper = styled.div`
   border: 1px solid transparent;
   border-color: ${(props) => props.theme.palette.shades.greyLight};
   background-color: ${(props) => props.theme.palette.white};
-  height: 35px;
+  height: 2.5em;
   /* margin: 15px; */
   max-width: 1200px;
 `;
