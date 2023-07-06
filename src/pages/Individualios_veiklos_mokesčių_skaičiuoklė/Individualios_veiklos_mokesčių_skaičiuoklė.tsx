@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../../components/molecules/Form';
 import Display from '../../components/molecules/Display';
-import { StyledPage } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
+import {
+  StyledPage,
+  StyledResultsWrapper,
+  StyledTitle,
+} from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
 
 interface FormValues {
@@ -207,36 +211,39 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
 
   return (
     <StyledPage>
-      <Form
-        fields={fields}
-        displayValues={handleDisplayValues}
-        onChange={handleInputChange}
-      />
+      <StyledTitle>Individualios veiklos mokeščių skaičiuoklė</StyledTitle>
+      <StyledResultsWrapper>
+        <Form
+          fields={fields}
+          displayValues={handleDisplayValues}
+          onChange={handleInputChange}
+        />
 
-      <Display
-        labelTitles={[
-          'Apmokestinamos pajamos',
-          'Gautos pajamos',
-          'Sanaudos',
-          'VSD',
-          'PSD',
-          'GPM',
-          'Galutinės pajamos',
-          'Galutiniai mokesčiai',
-          'Mokesčių tarifas',
-        ]}
-        values={[
-          apmokestinamosPajamos,
-          receivedIncome,
-          benefitsIncurred,
-          VSD,
-          PSD,
-          GPM,
-          finalIncome,
-          finalTaxes,
-          taxPercent,
-        ]}
-      />
+        <Display
+          labelTitles={[
+            'Apmokestinamos pajamos',
+            'Gautos pajamos',
+            'Sanaudos',
+            'VSD',
+            'PSD',
+            'GPM',
+            'Galutinės pajamos',
+            'Galutiniai mokesčiai',
+            'Mokesčių tarifas',
+          ]}
+          values={[
+            apmokestinamosPajamos,
+            receivedIncome,
+            benefitsIncurred,
+            VSD,
+            PSD,
+            GPM,
+            finalIncome,
+            finalTaxes,
+            taxPercent,
+          ]}
+        />
+      </StyledResultsWrapper>
     </StyledPage>
   );
 };
