@@ -2,16 +2,15 @@ import { styled } from 'styled-components';
 
 export const StyledMainWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   outline: none;
-  height: 35px;
-  margin: 0, auto;
+  height: 75vh;
+  margin: 0 auto;
   font-size: 1rem;
   line-height: 1.5;
   font-weight: 300;
-  padding-top: 50px;
 
   @media screen and (min-width: 900px) {
     padding: 0, 20px;
@@ -44,43 +43,51 @@ export const StyledUl = styled.ul`
   }
 `;
 export const StyledLi = styled.li`
-  width: 100%;
   list-style: none;
-  border: 1px solid transparent;
-  border-radius: 0.375em;
-  border-color: ${(props) => props.theme.palette.shades.greyLight};
-  background-color: ${(props) => props.theme.palette.white};
-  margin-bottom: 5px;
-  padding: 15px 5px;
-  text-align: center;
+  width: 100%;
+  height: 70px;
+  margin-bottom: 10px;
 
   a {
-    text-decoration: none;
-    color: ${(props) => props.theme.palette.shades.greyDark};
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    &:hover {
-      color: ${(props) => props.theme.palette.link.main};
-    }
+    text-decoration: none;
+    text-align: center;
+    color: ${(props) => props.theme.palette.shades.greyDark};
+    font-weight: 400;
+    font-size: 16px;
+    border: 1px solid transparent;
+    border-radius: 0.375em;
+    border-color: ${(props) => props.theme.palette.shades.greyLight};
+    background-color: ${(props) => props.theme.palette.white};
+    padding: 15px 5px;
+    height: 100%;
   }
 
-  &:hover {
-    color: ${(props) => props.theme.palette.link.main};
-    background-color: ${(props) => props.theme.palette.shades.whiteBis};
+  &:hover a {
+    color: ${(props) => props.theme.palette.white};
+    background-color: ${(props) => props.theme.palette.primary.main};
     cursor: pointer;
     transform: scale(1.02);
     transition: 0.5s ease-in;
   }
 
   @media screen and (min-width: 900px) {
-    width: 19%;
-    height: 150px;
+    height: 250px;
+    width: calc(100% / 5 - 15px);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+
+    a {
+      font-size: 20px;
+    }
   }
 
   @media screen and (min-width: 1300px) {
-    height: 200px;
+    height: 300px;
+    width: calc(100% / 5 - 30px);
   }
 `;

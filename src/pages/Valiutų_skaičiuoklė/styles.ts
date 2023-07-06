@@ -2,7 +2,9 @@ import { styled } from 'styled-components';
 import '../../index.css';
 
 export const StyledWrapper = styled.div`
-margin-top: 60px;
+  margin-top: 60px;
+  padding: 0 10px;
+
   input {
     margin: 5px;
   }
@@ -36,13 +38,26 @@ export const StyledSelect = styled.select`
 export const StyledBox = styled.div`
   display: flex;
   justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+
+  @media screen and (max-width: 900px) {
+    display: initial;
+
+    div {
+      width: 100%;
+    }
+  }
 `;
 
 export const StyledBoxLeft = styled.div`
-  width: 50%;
+  width: calc(50% - 10px);
   display: flex;
   flex-direction: column;
-  padding-left: 25px;
+  padding: 25px;
+
+  background-color: ${(props) => props.theme.palette.primary.light};
+  border-radius: 10px;
 
   .input {
     width: 31.7%;
@@ -53,7 +68,12 @@ export const StyledBoxLeft = styled.div`
   }
 `;
 export const StyledBoxRight = styled.div`
-  width: 50%;
+  width: calc(50% - 10px);
+
+  div {
+    display: flex;
+    justify-content: flex-start;
+  }
 
   .input-right-c {
     width: 100px;
@@ -63,12 +83,24 @@ export const StyledBoxRight = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 50%;
-    margin: 10px 0;
+    max-width: 60%;
+    margin: 5px 0;
   }
 
   .input-right-w {
     width: 300px;
     margin: 0 8px;
+  }
+
+  @media screen and (max-width: 900px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 10px;
+
+    div {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 `;

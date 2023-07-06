@@ -11,13 +11,13 @@ export const StyledDisplay = styled.div`
     width: 100%;
     justify-content: center;
     margin-top: 5px;
-    background-color: ${(props) => props.theme.palette.primary.main};
+    background-color: ${(props) => props.theme.palette.primary.light};
     border-radius: 0.375em;
     margin-top: 20px;
   }
 
   p {
-    color: ${(props) => props.theme.palette.white};
+    color: ${(props) => props.theme.palette.shades.greyDark};
     font-weight: 400;
     line-height: 1.5;
   }
@@ -42,5 +42,6 @@ export const StyledTitle = styled.h2`
   font-weight: 600;
   font-size: 24px;
   color: ${(props) => props.theme.palette.shades.greyDarker};
-  margin-top: 44px;
+  margin-top: 65px;
+  margin-bottom: 60px;
 `;

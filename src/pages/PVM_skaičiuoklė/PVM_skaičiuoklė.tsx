@@ -5,6 +5,7 @@ import {
   StyledPage,
   StyledResultsWrapper,
   StyledTitle,
+  StyledFormWrapper,
 } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
 
@@ -73,7 +74,9 @@ const PVM_skaičiuoklė: React.FC = () => {
     <StyledPage>
       <StyledTitle>PVM skaičiuoklė</StyledTitle>
       <StyledResultsWrapper>
-        <Form fields={fields} displayValues={handleDisplayValues} />
+        <StyledFormWrapper>
+          <Form fields={fields} displayValues={handleDisplayValues} />
+        </StyledFormWrapper>
         <Display
           labelTitles={[
             'PVM Tarifas',

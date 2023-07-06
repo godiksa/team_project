@@ -7,6 +7,7 @@ const theme = {
     light: 'hsl(0, 0%, 96%)',
     black: 'hsl(0, 0%, 4%)',
     dark: 'hsl(0, 0%, 21%)',
+    accent: "#485fc7",
     primary: {
       dark: 'hsl(171, 100%, 29%)',
       main: 'hsl(171, 100%, 41%)',
