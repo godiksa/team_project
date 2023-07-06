@@ -211,7 +211,7 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
 
   return (
     <StyledPage>
-         <StyledTitle>Individualios veiklos mokeščių skaičiuoklė</StyledTitle>
+      <StyledTitle>Individualios veiklos mokeščių skaičiuoklė</StyledTitle>
       <StyledResultsWrapper>
         <Form
           fields={fields}
