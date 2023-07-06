@@ -7,10 +7,10 @@ import {
   StyledBoxLeft,
   StyledBoxRight,
   StyledSelect,
-  StyledTitle,
+  StyledTitle2,
   StyledWrapper,
 } from './styles';
-
+import { StyledTitle } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 const CurrencyCalculator = () => {
   const [baseCurrency, setBaseCurrency] = useState('');
   const [baseValue, setBaseValue] = useState('');
@@ -123,6 +123,8 @@ const CurrencyCalculator = () => {
 
   return (
     <StyledWrapper>
+      <StyledTitle>Valiutos skaičiuoklė</StyledTitle>
+
       <StyledBox>
         {' '}
         <StyledBoxLeft>
@@ -175,9 +177,9 @@ const CurrencyCalculator = () => {
             <div key={currency}>
               <div className='input-right'>
                 <div className='input-right-c'>
-                  <StyledTitle className='currencyTitle'>
+                  <StyledTitle2 className='currencyTitle'>
                     {currency}:{' '}
-                  </StyledTitle>
+                  </StyledTitle2>
                 </div>
                 <div className='input-right-w'>
                   <Input

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import Form from '../../components/molecules/Form';
 import Display from '../../components/molecules/Display';
-import { StyledPage } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
+import {
+  StyledPage,
+  StyledResultsWrapper,
+  StyledTitle,
+} from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
 
 const PVM_skaičiuoklė: React.FC = () => {
@@ -67,21 +71,24 @@ const PVM_skaičiuoklė: React.FC = () => {
 
   return (
     <StyledPage>
-      <Form fields={fields} displayValues={handleDisplayValues} />
-      <Display
-        labelTitles={[
-          'PVM Tarifas',
-          'Suma (be PVM)',
-          'PVM suma',
-          'Bendra suma (su PVM)',
-        ]}
-        values={[
-          displayedValues.percentage,
-          amount !== '' ? amount.toString() : '',
-          pvmSum.toString(),
-          totalAmount.toString(),
-        ]}
-      />
+      <StyledTitle>PVM skaičiuoklė</StyledTitle>
+      <StyledResultsWrapper>
+        <Form fields={fields} displayValues={handleDisplayValues} />
+        <Display
+          labelTitles={[
+            'PVM Tarifas',
+            'Suma (be PVM)',
+            'PVM suma',
+            'Bendra suma (su PVM)',
+          ]}
+          values={[
+            displayedValues.percentage,
+            amount !== '' ? amount.toString() : '',
+            pvmSum.toString(),
+            totalAmount.toString(),
+          ]}
+        />
+      </StyledResultsWrapper>
     </StyledPage>
   );
 };

@@ -2,12 +2,13 @@ import { styled } from 'styled-components';
 import '../../index.css';
 
 export const StyledWrapper = styled.div`
+margin-top: 60px;
   input {
     margin: 5px;
   }
 `;
 
-export const StyledTitle = styled.span`
+export const StyledTitle2 = styled.span`
   text-transform: uppercase;
 `;
 
