@@ -74,7 +74,6 @@ const CurrencyCalculator = () => {
           'aud',
           'cad',
           'nok',
-          'jpy',
         ]);
       } catch (error) {
         console.error('Error fetching currency rates:', error);
@@ -132,22 +131,25 @@ const CurrencyCalculator = () => {
           <div>Data: {dateValue}</div>
           <div>
             <h3>Bazinė valiuta:</h3>
-            <StyledSelect
-              value={baseCurrency}
-              onChange={handleBaseCurrencyChange}
-            >
-              {Object.keys(initialCurrencyRates).map((currency) => (
-                <option key={currency} value={currency}>
-                  {currency}
-                </option>
-              ))}
-            </StyledSelect>
+            <div className='option'>
+              <StyledSelect
+                value={baseCurrency}
+                onChange={handleBaseCurrencyChange}
+              >
+                {Object.keys(initialCurrencyRates).map((currency) => (
+                  <option className='option' key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </StyledSelect>
+            </div>
           </div>
           <div>
             <h3>Suma:</h3>
             <div className='input'>
               <Input
                 type='text'
+                placeholder='Įveskite sumą'
                 value={baseValue}
                 onChange={handleBaseValueChange}
                 setvalue={setBaseValue}
@@ -156,23 +158,27 @@ const CurrencyCalculator = () => {
           </div>
           <div>
             <h3>Pridėti valiutą:</h3>
-            <StyledSelect
-              value={selectedCurrency}
-              onChange={handleCurrencySelection}
-            >
-              <option value='' disabled>
-                Pasirinkite valiutą
-              </option>
-              {Object.keys(initialCurrencyRates).map((currency) => (
-                <option key={currency} value={currency}>
-                  {currency}
+            <div className='option'>
+              <StyledSelect
+                value={selectedCurrency}
+                onChange={handleCurrencySelection}
+              >
+                <option value='' disabled>
+                  Pasirinkite valiutą
                 </option>
-              ))}
-            </StyledSelect>
+
+                {Object.keys(initialCurrencyRates).map((currency) => (
+                  <option key={currency} value={currency}>
+                    {currency}
+                  </option>
+                ))}
+              </StyledSelect>
+            </div>
           </div>
         </StyledBoxLeft>
         <StyledBoxRight>
-          <h3>Valiutos:</h3>
+          <h3 className='mobiletitle'>Valiutos:</h3>
+
           {displayedCurrencies.map((currency) => (
             <div key={currency}>
               <div className='input-right'>

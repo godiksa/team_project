@@ -55,15 +55,23 @@ export const StyledBoxLeft = styled.div`
   display: flex;
   flex-direction: column;
   padding: 25px;
-
   background-color: ${(props) => props.theme.palette.primary.light};
   border-radius: 10px;
+
+  .option {
+    width: 700px;
+  
+  }
+  .input {
+    width: 40%;
+
+  }
 
   @media screen and (max-width: 768px) {
     width: 100%;
   }
   .input {
-    width: 31.7%;
+    width: 210px;
   }
 
   h3 {
@@ -72,6 +80,7 @@ export const StyledBoxLeft = styled.div`
 `;
 export const StyledBoxRight = styled.div`
   width: calc(50% - 10px);
+
 
   div {
     display: flex;
@@ -86,24 +95,33 @@ export const StyledBoxRight = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 60%;
+    max-width: 70%;
     margin: 5px 0;
   }
 
   .input-right-w {
-    width: 300px;
+    width: 500px;
     margin: 0 8px;
   }
 
   @media screen and (max-width: 900px) {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
     margin-top: 10px;
+    margin-bottom: 50px;
+
+    h3 {
+      display: flex;
+      flex-direction: row;
+      align-items: start;
+      justify-content: flex-start;
+
+    }
 
     div {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
     }
+
   }
 `;
