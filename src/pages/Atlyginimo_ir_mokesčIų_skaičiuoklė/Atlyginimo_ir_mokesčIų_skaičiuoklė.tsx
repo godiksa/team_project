@@ -5,16 +5,11 @@ import {
   StyledPage,
   StyledResultsWrapper,
   StyledTitle,
-  StyledFormWrapper
+  StyledFormWrapper,
 } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
-//import { useTheme } from 'styled-components';
 
 const Atlyginimo_skaičiuoklė: React.FC = () => {
-  //const theme = useTheme();
-
-  //const displayItem = useRef<HTMLDivElement | null>(null);
-
   const fields: FormField[] = [
     {
       key: 'year',
@@ -33,6 +28,15 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
       text: 'NPD',
       type: 'radio',
       radioOptions: ['Paskaičiuos sistema', 'Nurodysiu pats'],
+      popupInput: [
+        {
+          triggerText: 'Nurodysiu pats',
+          key: 'userNpd',
+          text: 'Įveskite NPD',
+          type: 'number',
+          textPlaceholder: 'Enter NPD',
+        },
+      ],
     },
     {
       key: 'amount',
@@ -53,13 +57,9 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
     year: '2023',
     additionalSodra: '0%',
     calculationType: 'Ant popieriaus',
+    npdType: 'Paskaičiuos sistema',
+    userNpd: '',
   });
-
-  // useEffect(() => {
-  //   if (displayItem.current instanceof HTMLDivElement) {
-  //     displayItem.current.style.backgroundColor = theme.palette.primary.main;
-  //   }
-  // }, [theme]);
 
   const handleDisplayValues = (values: any) => {
     setDisplayedValues((prevValues) => ({ ...prevValues, ...values }));
@@ -156,6 +156,10 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
 
   if (!isNaN(amount as number)) {
     npd = calculateNPD(amount as number, displayedValues.year);
+    if (displayedValues.npdType === 'Nurodysiu pats') {
+      npd = displayedValues.userNpd;
+    }
+
     pajamuMokestis = calculatePajamuMokestis(amount as number, Number(npd));
     sodra1 = calculateSodra1(amount as number);
     sodra2 = calculateSodra2(amount as number, displayedValues.additionalSodra);
@@ -182,6 +186,10 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
       while (Number(fakeAtlyginimas) != atlyginimasIrankas) {
         amount = (Number(amount) + 0.01).toFixed(2);
         npd = calculateNPD(Number(amount), displayedValues.year);
+        if (displayedValues.npdType === 'Nurodysiu pats') {
+          npd = displayedValues.userNpd;
+        }
+
         pajamuMokestis = calculatePajamuMokestis(Number(amount), Number(npd));
         sodra1 = calculateSodra1(Number(amount));
         sodra2 = calculateSodra2(
@@ -207,32 +215,32 @@ const Atlyginimo_skaičiuoklė: React.FC = () => {
       <StyledTitle>Atlyginimo ir mokesčių skaičiuoklė</StyledTitle>
       <StyledResultsWrapper>
         <StyledFormWrapper>
-        <Form fields={fields} displayValues={handleDisplayValues} />
+          <Form fields={fields} displayValues={handleDisplayValues} />
         </StyledFormWrapper>
-          <Display
-            labelTitles={[
-              'Atlyginimas "ant popieriaus"',
-              'Pritaikytas NPD',
-              'Pajamų mokestis 20%',
-              'Sodra. Sveikatos draudimas 6.98%',
-              'Sodra. Pensijų ir soc. draudimas 12,52%',
-              'Išmokamas atlyginimas "į rankas"',
-              'Darbdavio sumokami mokesčiai',
-              'Sodra 1,77%',
-              'Visa darbo vietos kaina',
-            ]}
-            values={[
-              `${amount.toString()} €`,
-              `${npd.toString()} €`,
-              `${pajamuMokestis.toString()} €`,
-              `${sodra1.toString()} €`,
-              `${sodra2.toString()} €`,
-              `${atlyginimasIrankas.toString()} €`,
-              '',
-              `${darbdavioSodra.toString()} €`,
-              `${visaDarboVieta.toString()} €`,
-            ]}
-          />
+        <Display
+          labelTitles={[
+            'Atlyginimas "ant popieriaus"',
+            'Pritaikytas NPD',
+            'Pajamų mokestis 20%',
+            'Sodra. Sveikatos draudimas 6.98%',
+            'Sodra. Pensijų ir soc. draudimas 12,52%',
+            'Išmokamas atlyginimas "į rankas"',
+            'Darbdavio sumokami mokesčiai',
+            'Sodra 1,77%',
+            'Visa darbo vietos kaina',
+          ]}
+          values={[
+            `${amount.toString()} €`,
+            `${npd.toString()} €`,
+            `${pajamuMokestis.toString()} €`,
+            `${sodra1.toString()} €`,
+            `${sodra2.toString()} €`,
+            `${atlyginimasIrankas.toString()} €`,
+            '',
+            `${darbdavioSodra.toString()} €`,
+            `${visaDarboVieta.toString()} €`,
+          ]}
+        />
       </StyledResultsWrapper>
     </StyledPage>
   );
