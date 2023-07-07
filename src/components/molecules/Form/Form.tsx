@@ -96,37 +96,41 @@ const Form: React.FC<FormProps> = ({
     }
   };
 
-  const handleCheckboxChange = (
-    key: string,
-    value: string,
-    popupKey: string
-  ) => {
-    const selectedValues = (formValues[key] as (string | number)[]) || [];
-
-    const updatedValues = selectedValues.includes(value)
-      ? selectedValues.filter((x) => x !== value)
-      : [...selectedValues, value];
-
-    const updatedFormValues = {
-      ...formValues,
-      [key]: updatedValues,
-    };
-
-    setFormValues(updatedFormValues);
-    displayValues(updatedFormValues);
-
-    const updatedTriggerValues = selectedTriggerCheckboxes.includes(value)
-      ? selectedTriggerCheckboxes.filter((x) => x !== value)
-      : [...selectedTriggerCheckboxes, value];
-
-    setSelectedTriggerCheckboxes(updatedTriggerValues);
-
-    const updatedDeleteKeys = buttonPressed.includes(popupKey)
-      ? buttonPressed.filter((x) => x !== popupKey)
-      : buttonPressed.filter((x) => x !== key);
-
-    setButtonPressed(updatedDeleteKeys);
+const handleCheckboxChange = (
+  key: string,
+  value: string,
+  popupKey: string
+) => {
+  const selectedValues = (formValues[key] as (string | number)[]) || [];
+  const updatedValues = selectedValues.includes(value)
+    ? selectedValues.filter((x) => x !== value)
+    : [...selectedValues, value];
+  const updatedFormValues = {
+    ...formValues,
+    [key]: updatedValues,
   };
+
+  setFormValues(updatedFormValues);
+  displayValues(updatedFormValues);
+  setSelectedTriggerCheckboxes(updatedValues);
+
+  const updatedDeleteKeys = buttonPressed.includes(popupKey)
+    ? buttonPressed.filter((x) => x !== popupKey)
+    : buttonPressed.filter((x) => x !== key);
+
+  setButtonPressed(updatedDeleteKeys);
+
+  if (onChange) {
+    const event = {
+      target: {
+        name: key,
+        value: updatedValues,
+        checked: selectedValues.includes(value), // Set checked based on inclusion of value
+      },
+    };
+    onChange(event as unknown as React.ChangeEvent<HTMLInputElement>);
+  }
+};
 
   const handleDeleteButtonClick = (key: string) => {
     setButtonPressed((prevKey) => [...prevKey, key]);
