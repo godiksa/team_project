@@ -1,10 +1,9 @@
-import { StyledLi, StyledMainWrapper, StyledTitle, StyledUl } from './styles';
+import { StyledLi, StyledMainWrapper, StyledUl } from './styles';
 import { Link } from 'react-router-dom';
 
 const Pagrindinis = () => {
   return (
     <StyledMainWrapper>
-      <StyledTitle>Skaičiuoklės</StyledTitle>
       <StyledUl>
         <StyledLi>
           <Link className='titles' to={'/Atlyginimo_ir_mokesčių_skaičiuoklė'}>

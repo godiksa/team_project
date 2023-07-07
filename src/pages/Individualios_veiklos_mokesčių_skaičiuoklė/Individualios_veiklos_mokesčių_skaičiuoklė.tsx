@@ -4,7 +4,7 @@ import Display from '../../components/molecules/Display';
 import {
   StyledPage,
   StyledResultsWrapper,
-  StyledTitle,
+  StyledTitle, StyledFormWrapper
 } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
 
@@ -213,12 +213,13 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
     <StyledPage>
       <StyledTitle>Individualios veiklos mokeščių skaičiuoklė</StyledTitle>
       <StyledResultsWrapper>
+        <StyledFormWrapper>
         <Form
           fields={fields}
           displayValues={handleDisplayValues}
           onChange={handleInputChange}
         />
-
+</StyledFormWrapper>
         <Display
           labelTitles={[
             'Apmokestinamos pajamos',
