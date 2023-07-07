@@ -4,7 +4,8 @@ import Display from '../../components/molecules/Display';
 import {
   StyledPage,
   StyledResultsWrapper,
-  StyledTitle, StyledFormWrapper
+  StyledTitle,
+  StyledFormWrapper,
 } from '../Atlyginimo_ir_mokesčIų_skaičiuoklė/styles';
 import { FormField } from '../../components/molecules/Form/Form';
 
@@ -47,7 +48,7 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
       key: 'incomeType',
       text: '',
       type: 'radio',
-      radioOptions: ['30% nuo pajamų', 'Faktiškai patirtos'],
+      radioOptions: ['Faktiškai patirtos', '30% nuo pajamų'],
     },
     {
       key: 'pension',
@@ -86,7 +87,7 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
 
     if (name === 'income') {
       setReceivedIncome(value);
@@ -99,15 +100,14 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
     } else if (name === 'incomeType') {
       handleOptionChange();
     } else if (name === 'pension') {
-      handleAdditionalPensionChange();
+      setAdditionalPension(checked);
+      calculateApmokestinamosPajamos();
+      calculateGPMAmount();
+      calculateVSDAmount();
+      calculatePSDAmount();
+      setVSDPercent(() => (!checked ? '15.52%' : '12.52%'));
+      calculateFinalIncome();
     }
-  };
-
-  const handleAdditionalPensionChange = () => {
-    setAdditionalPension((prev) => !prev);
-    setVSDPercent((prevPercent) =>
-      prevPercent === '12.52%' ? '15.52%' : '12.52%'
-    );
   };
 
   const handleOptionChange = () => {
@@ -120,17 +120,17 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
         incomeType: 'Faktiškai patirtos',
       }));
 
-      const consumption = parseFloat(incomeReceived) * 0.3;
-      setBenefitsIncurred(
-        isNaN(consumption) ? '' : consumption.toFixed(2).toString()
-      );
+      setBenefitsIncurred('');
     } else {
       setDisplayedValues((prevValues) => ({
         ...prevValues,
         incomeType: '30% nuo pajamų',
       }));
 
-      setBenefitsIncurred('');
+      const consumption = parseFloat(incomeReceived) * 0.3;
+      setBenefitsIncurred(
+        isNaN(consumption) ? '' : consumption.toFixed(2).toString()
+      );
     }
   };
 
@@ -148,26 +148,43 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
 
   const calculateVSDAmount = () => {
     const vsdValue = parseFloat(displayedValues.VSD) || 0;
-
-    const VSDAmount =
+    let VSDAmount =
       (!additionalPension
         ? calculateProfit() * 0.9 * 0.1552
         : calculateProfit() * 0.9 * 0.1252) - vsdValue;
+
+    if (!additionalPension) {
+      VSDAmount -= calculateProfit() * 0.03;
+    }
 
     setVSD(!isNaN(VSDAmount) ? VSDAmount.toFixed(2).toString() : '');
   };
 
   const calculatePSDAmount = () => {
     const psdValue = parseFloat(displayedValues.PSD) || 0;
+    let PSDAmount = calculateProfit() * 0.9 * 0.0698 - psdValue;
 
-    const PSDAmount = calculateProfit() * 0.9 * 0.0698 - psdValue;
+    if (!additionalPension) {
+      PSDAmount -= calculateProfit() * 0.03;
+    }
+
     setPSD(!isNaN(PSDAmount) ? PSDAmount.toFixed(2).toString() : '');
   };
 
   const calculateGPMAmount = () => {
     const profit = calculateProfit();
-    const GPMAmount =
-      calculateProfit() <= 20000 ? profit * 0.9 * 0.05 : profit * 0.9 * 0.15;
+    let GPMAmount;
+
+    if (additionalPension) {
+      GPMAmount =
+        calculateProfit() <= 20000 ? profit * 0.9 * 0.05 : profit * 0.9 * 0.15;
+    } else {
+      GPMAmount =
+        calculateProfit() <= 20000
+          ? profit * 0.9 * 0.05
+          : profit * 0.9 * 0.15 - profit * 0.03;
+    }
+
     const GPMPercentage = profit <= 20000 ? '5%' : '15%';
 
     setGPMPercent(GPMPercentage);
@@ -194,9 +211,10 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
 
   useEffect(() => {
     calculateApmokestinamosPajamos();
+    calculateGPMAmount();
     calculateVSDAmount();
     calculatePSDAmount();
-    calculateGPMAmount();
+    setVSDPercent(() => (!additionalPension ? '15.52%' : '12.52%'));
     calculateFinalIncome();
   }, [
     receivedIncome,
@@ -204,9 +222,6 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
     displayedValues.VSD,
     displayedValues.PSD,
     additionalPension,
-    PSD,
-    VSD,
-    GPM,
   ]);
 
   return (
@@ -214,12 +229,12 @@ const Individualios_veiklos_mokesciu_skaiciuokle: React.FC = () => {
       <StyledTitle>Individualios veiklos mokeščių skaičiuoklė</StyledTitle>
       <StyledResultsWrapper>
         <StyledFormWrapper>
-        <Form
-          fields={fields}
-          displayValues={handleDisplayValues}
-          onChange={handleInputChange}
-        />
-</StyledFormWrapper>
+          <Form
+            fields={fields}
+            displayValues={handleDisplayValues}
+            onChange={handleInputChange}
+          />
+        </StyledFormWrapper>
         <Display
           labelTitles={[
             'Apmokestinamos pajamos',
