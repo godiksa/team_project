@@ -59,6 +59,9 @@ export const StyledBoxLeft = styled.div`
   background-color: ${(props) => props.theme.palette.primary.light};
   border-radius: 10px;
 
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
   .input {
     width: 31.7%;
   }
